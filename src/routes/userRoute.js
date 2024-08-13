@@ -1,5 +1,6 @@
 import express from 'express'
 import { authController } from '~/controllers/authController'
+import { groupController } from '~/controllers/groupController'
 import { userController } from '~/controllers/userController'
 import { verifyToken } from '~/middlewares/verifyToken'
 
