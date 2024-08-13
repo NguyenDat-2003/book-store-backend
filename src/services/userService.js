@@ -45,7 +45,10 @@ const createNew = async (reqBody) => {
 
 const getAll = async () => {
   try {
-    return await db.User.findAll({ attributes: { exclude: ['password'] } })
+    return await db.User.findAll({
+      attributes: ['id', 'firstName', 'lastName', 'email'],
+      include: { model: db.Group, attributes: ['name'] }
+    })
   } catch (error) {
     throw error
   }
