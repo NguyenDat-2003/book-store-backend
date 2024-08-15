@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/utils/ApiError'
 
 export const checkUserPermission = (req, res, next) => {
-  let currentUrl = req.originalUrl
+  let currentUrl = req.baseUrl + req.path
   const roles = req.dataPayload.allRolesOfGroup[0].Roles
 
   if (!roles || roles.length == 0) {
