@@ -5,7 +5,7 @@ import { createSignToken } from '~/utils/createSignToken'
 const createUser = async (req, res, next) => {
   try {
     await userService.createNew(req.body)
-    return res.status(StatusCodes.CREATED).json({ message: 'Successfully' })
+    return res.status(StatusCodes.CREATED).json({ message: 'Create Successfully' })
   } catch (error) {
     next(error)
   }
@@ -32,7 +32,7 @@ const getUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     await userService.updateDetail(req.params.id, req.body)
-    return res.status(StatusCodes.CREATED).json({ message: 'Successfully' })
+    return res.status(StatusCodes.CREATED).json({ message: 'Update Successfully' })
   } catch (error) {
     next(error)
   }

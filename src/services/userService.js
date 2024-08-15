@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { StatusCodes } from 'http-status-codes'
-
 import { Op } from 'sequelize'
+
 import db from '~/models'
 import ApiError from '~/utils/ApiError'
 import { recommendItems } from '~/utils/recommendSystem'
@@ -31,8 +31,19 @@ const getBooksInOrder = async (userId) => {
   })
 }
 
+const checkEmailExist = async (email) => {
+  try {
+    return await db.User.findOne({ where: { email } })
+  } catch (error) {
+    throw error
+  }
+}
 const createNew = async (reqBody) => {
   try {
+    const emailExist = await checkEmailExist(reqBody.email)
+    if (emailExist) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Email has already exist !')
+    }
     const newUser = {
       ...reqBody,
       password: await bcrypt.hash(reqBody.password, 12)
@@ -47,7 +58,8 @@ const getAll = async () => {
   try {
     return await db.User.findAll({
       attributes: ['id', 'firstName', 'lastName', 'email'],
-      include: { model: db.Group, attributes: ['name'] }
+      include: { model: db.Group, attributes: ['name'] },
+      order: [['id', 'DESC']]
     })
   } catch (error) {
     throw error
@@ -58,7 +70,8 @@ const getDetail = async (userId) => {
   try {
     return await db.User.findOne({
       where: { id: userId },
-      attributes: { exclude: ['password'] }
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt', 'GroupId'] },
+      include: { model: db.Group }
     })
   } catch (error) {
     throw error
