@@ -1,15 +1,33 @@
 import { env } from '~/config/environment'
 import jwt from 'jsonwebtoken'
+import db from '~/models'
 
-const signToken = (id) => {
-  return jwt.sign({ id }, env.JWT_SECRET, {
+const getRolesOfGroup = async (groupId) => {
+  return await db.Group.findAll({
+    where: { id: groupId },
+    include: [
+      {
+        model: db.Role,
+        attributes: ['id', 'url', 'description'],
+        through: { attributes: [] }
+      }
+    ]
+  })
+}
+const signToken = (payload) => {
+  return jwt.sign({ payload }, env.JWT_SECRET, {
     //---JWT hết hạn sau 3d - 3ngày
     expiresIn: env.JWT_EXPIRES_IN
   })
 }
 
-export const createSignToken = (user, statusCode, res) => {
-  const token = signToken(user.id)
+export const createSignToken = async (user, statusCode, res) => {
+  const allRolesOfGroup = await getRolesOfGroup(user.groupId)
+  const payload = {
+    userId: user.id,
+    allRolesOfGroup
+  }
+  const token = signToken(payload)
   const cookieOptions = {
     expires: new Date(
       //--Đổi thời gian 3 ngày lưu cookie sang milisecond

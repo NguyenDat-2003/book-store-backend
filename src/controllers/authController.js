@@ -14,7 +14,7 @@ const signup = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const user = await authService.login(req.body)
-    createSignToken(user.dataValues, StatusCodes.OK, res)
+    createSignToken(user, StatusCodes.OK, res)
   } catch (error) {
     next(error)
   }
