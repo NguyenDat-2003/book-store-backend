@@ -1,7 +1,7 @@
 import express from 'express'
 import { authController } from '~/controllers/authController'
-import { groupController } from '~/controllers/groupController'
 import { userController } from '~/controllers/userController'
+import { checkUserPermission } from '~/middlewares/checkUserPermission'
 import { verifyToken } from '~/middlewares/verifyToken'
 
 const router = express.Router()
@@ -24,7 +24,8 @@ router.get('/my-order', userController.getOrder)
 router.get('/purchases', userController.getPurchases)
 router.post('/recommend', userController.recommendSystem)
 
-router.route('/').post(userController.createUser).get(userController.getAllUser)
+router.route('/create').post(checkUserPermission, userController.createUser)
+router.route('/read').get(checkUserPermission, userController.getAllUser)
 router.route('/:id').get(userController.getUser).put(userController.updateUser).delete(userController.deleteUser)
 
 export const userRoute = router

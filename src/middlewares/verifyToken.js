@@ -16,13 +16,17 @@ export const verifyToken = async (req, res, next) => {
 
   // 2) Verification token
   const decoded = await promisify(jwt.verify)(token, env.JWT_SECRET)
+  if (!decoded) {
+    return next(new ApiError(StatusCodes.UNAUTHORIZED, 'User not authenticated!!!'))
+  }
   // 3) Check if user still exists
   const currentUser = await db.User.findOne({
-    where: { id: decoded.id }
+    where: { id: decoded.payload.userId }
   })
   if (!currentUser) {
     return next(new ApiError(StatusCodes.UNAUTHORIZED, 'The user belonging to this token does no longer exist.'))
   }
+  req.dataPayload = decoded.payload
   req.user = currentUser
   next()
 }
