@@ -10,7 +10,7 @@ router.post('/signup', authController.signup)
 router.post('/login', authController.login)
 router.post('/logout', authController.logout)
 
-router.use(verifyToken)
+router.use(verifyToken, checkUserPermission)
 router.put('/update-password', userController.updatePassword)
 router.put('/update-me', userController.updateMe)
 // --------------------ADD TO CART--------------
@@ -24,8 +24,10 @@ router.get('/my-order', userController.getOrder)
 router.get('/purchases', userController.getPurchases)
 router.post('/recommend', userController.recommendSystem)
 
-router.route('/create').post(checkUserPermission, userController.createUser)
-router.route('/read').get(checkUserPermission, userController.getAllUser)
-router.route('/:id').get(userController.getUser).put(userController.updateUser).delete(userController.deleteUser)
+router.route('/create').post(userController.createUser)
+router.route('/read').get(userController.getAllUser)
+router.route('/detail').get(userController.getUser)
+router.route('/update').put(userController.updateUser)
+router.route('/delete').delete(userController.deleteUser)
 
 export const userRoute = router

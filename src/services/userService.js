@@ -78,11 +78,11 @@ const getDetail = async (userId) => {
   }
 }
 
-const updateDetail = async (userId, reqBody) => {
+const updateDetail = async (reqBody) => {
   try {
     return await db.User.update(reqBody, {
       where: {
-        id: userId
+        id: reqBody.id
       }
     })
   } catch (error) {

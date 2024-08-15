@@ -22,7 +22,7 @@ const getAllUser = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const user = await userService.getDetail(req.params.id)
+    const user = await userService.getDetail(req.query.id)
     return res.status(StatusCodes.CREATED).json(user)
   } catch (error) {
     next(error)
@@ -31,7 +31,7 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
-    await userService.updateDetail(req.params.id, req.body)
+    await userService.updateDetail(req.body)
     return res.status(StatusCodes.CREATED).json({ message: 'Update Successfully' })
   } catch (error) {
     next(error)
@@ -40,7 +40,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    await userService.deleteDetail(req.params.id)
+    await userService.deleteDetail(req.body.id)
     return res.status(StatusCodes.CREATED).json({ message: 'Successfully' })
   } catch (error) {
     next(error)
