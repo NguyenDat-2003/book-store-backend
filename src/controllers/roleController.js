@@ -10,4 +10,30 @@ const createRoles = async (req, res, next) => {
   }
 }
 
-export const roleController = { createRoles }
+const getAllRoles = async (req, res, next) => {
+  try {
+    const role = await roleService.getAllRoles()
+    return res.status(StatusCodes.OK).json(role)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const deleteRole = async (req, res, next) => {
+  try {
+    const role = await roleService.deleteRole(req.query.id)
+    return res.status(StatusCodes.OK).json(role)
+  } catch (error) {
+    next(error)
+  }
+}
+const updateRole = async (req, res, next) => {
+  try {
+    const role = await roleService.updateRole(req.body)
+    return res.status(StatusCodes.OK).json(role)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const roleController = { createRoles, getAllRoles, deleteRole, updateRole }

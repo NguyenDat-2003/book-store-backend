@@ -18,4 +18,36 @@ const createNew = async (roles) => {
   }
 }
 
-export const roleService = { createNew }
+const getAllRoles = async () => {
+  try {
+    return await db.Role.findAll()
+  } catch (error) {
+    throw error
+  }
+}
+
+const deleteRole = async (id) => {
+  try {
+    return await db.Role.destroy({
+      where: {
+        id
+      }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+const updateRole = async (reqBody) => {
+  try {
+    return await db.Role.update(reqBody, {
+      where: {
+        id: reqBody.id
+      }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+export const roleService = { createNew, getAllRoles, deleteRole, updateRole }
