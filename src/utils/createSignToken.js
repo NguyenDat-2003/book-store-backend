@@ -40,6 +40,10 @@ export const createSignToken = async (user, statusCode, res) => {
   user.password = undefined
 
   res.cookie('token', token, cookieOptions)
+  const data = {
+    ...user.dataValues,
+    allRolesOfGroup: allRolesOfGroup[0]
+  }
 
-  return res.status(statusCode).json(user)
+  return res.status(statusCode).json(data)
 }

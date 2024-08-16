@@ -10,7 +10,7 @@ router.post('/signup', authController.signup)
 router.post('/login', authController.login)
 router.post('/logout', authController.logout)
 
-router.use(verifyToken, checkUserPermission)
+router.use(verifyToken)
 router.put('/update-password', userController.updatePassword)
 router.put('/update-me', userController.updateMe)
 // --------------------ADD TO CART--------------
@@ -24,6 +24,7 @@ router.get('/my-order', userController.getOrder)
 router.get('/purchases', userController.getPurchases)
 router.post('/recommend', userController.recommendSystem)
 
+router.use(checkUserPermission)
 router.route('/create').post(userController.createUser)
 router.route('/read').get(userController.getAllUser)
 router.route('/detail').get(userController.getUser)
