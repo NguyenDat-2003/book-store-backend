@@ -36,4 +36,13 @@ const updateRole = async (req, res, next) => {
   }
 }
 
-export const roleController = { createRoles, getAllRoles, deleteRole, updateRole }
+const getRoleByGroup = async (req, res, next) => {
+  try {
+    const role = await roleService.getRoleByGroup(req.params.groupId)
+    return res.status(StatusCodes.OK).json(role)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const roleController = { createRoles, getAllRoles, deleteRole, updateRole, getRoleByGroup }

@@ -50,4 +50,22 @@ const updateRole = async (reqBody) => {
   }
 }
 
-export const roleService = { createNew, getAllRoles, deleteRole, updateRole }
+const getRoleByGroup = async (groupId) => {
+  try {
+    return await db.Group.findOne({
+      where: {
+        id: groupId
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: {
+        model: db.Role,
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        through: { attributes: [] }
+      }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+export const roleService = { createNew, getAllRoles, deleteRole, updateRole, getRoleByGroup }
