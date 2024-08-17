@@ -8,7 +8,7 @@ export const checkUserPermission = (req, res, next) => {
   if (!roles || roles.length == 0) {
     throw new ApiError(StatusCodes.FORBIDDEN, 'You dont have permission to access this resource!')
   }
-  let checkRole = roles.some((item) => item.url === currentUrl)
+  let checkRole = roles.some((item) => item.url === currentUrl || currentUrl.includes(item.url))
   if (checkRole) {
     return next()
   } else {

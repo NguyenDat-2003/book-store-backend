@@ -7,5 +7,6 @@ router.post('/create', roleController.createRoles)
 router.get('/read', roleController.getAllRoles)
 router.delete('/delete', roleController.deleteRole)
 router.put('/update', roleController.updateRole)
+router.get('/by-group/:groupId', roleController.getRoleByGroup)
 
 export const roleRoute = router
