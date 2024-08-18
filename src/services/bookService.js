@@ -16,13 +16,17 @@ const createNew = async (reqBody) => {
 const getAll = async (page, limit) => {
   const offset = (page - 1) * limit
   try {
-    const { count, rows } = await db.Book.findAndCountAll({
-      offset,
-      limit,
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
-    })
-    let totalPages = Math.ceil(count / limit)
-    return { totalRows: count, totalPages, books: rows }
+    if (page && limit) {
+      const { count, rows } = await db.Book.findAndCountAll({
+        offset,
+        limit,
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
+      let totalPages = Math.ceil(count / limit)
+      return { totalRows: count, totalPages, books: rows }
+    } else {
+      return await db.Book.findAll({ include: [{ model: db.Supplier }, { model: db.Category }], order: [['id', 'DESC']] })
+    }
   } catch (error) {
     throw error
   }
