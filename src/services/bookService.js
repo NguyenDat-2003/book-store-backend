@@ -44,11 +44,13 @@ const getDetail = async (bookId) => {
   }
 }
 
-const updateDetail = async (bookId, reqBody) => {
+const updateDetail = async (reqBody) => {
+  delete reqBody.SupplierId
+  delete reqBody.CategoryId
   try {
     return await db.Book.update(reqBody, {
       where: {
-        id: bookId
+        id: reqBody.id
       }
     })
   } catch (error) {
