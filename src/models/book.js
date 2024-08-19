@@ -28,9 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       price: {
         type: DataTypes.DOUBLE
       },
-      discount: {
-        type: DataTypes.DOUBLE
-      },
+      discount: DataTypes.INTEGER,
       stock: {
         type: DataTypes.INTEGER
       },
@@ -46,7 +44,10 @@ module.exports = (sequelize, DataTypes) => {
       slug: DataTypes.STRING,
       image: DataTypes.STRING,
       totalRating: DataTypes.INTEGER,
-      sold: DataTypes.INTEGER,
+      sold: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
       ratingsAverage: {
         type: DataTypes.DOUBLE,
         defaultValue: 3.5
