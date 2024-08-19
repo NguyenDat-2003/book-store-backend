@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.DOUBLE
       },
       discount: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.INTEGER
       },
       stock: {
         allowNull: false,
