@@ -31,6 +31,9 @@ module.exports = {
       sex: {
         type: Sequelize.STRING
       },
+      avatar: {
+        type: Sequelize.STRING
+      },
       groupId: Sequelize.INTEGER,
       createdAt: {
         allowNull: false,
