@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Book.belongsToMany(models.Order, { through: 'Book_Order' })
       Book.belongsTo(models.Supplier)
       Book.belongsTo(models.Category)
+      Book.hasMany(models.Review, { foreignKey: 'bookId' })
     }
   }
   Book.init(
