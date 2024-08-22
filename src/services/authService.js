@@ -8,6 +8,7 @@ const signup = async (reqBody) => {
   try {
     const newUser = {
       ...reqBody,
+      avatar: '/no-user.png',
       password: await bcrypt.hash(reqBody.password, 12)
     }
     return await db.User.create(newUser, { raw: true })
