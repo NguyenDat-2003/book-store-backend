@@ -11,9 +11,7 @@ const createBook = async (req, res, next) => {
 }
 const getAllBook = async (req, res, next) => {
   try {
-    let page = req.query.page
-    let limit = req.query.limit
-    const books = await bookService.getAll(+page, +limit)
+    const books = await bookService.getAll(req.query)
     return res.status(StatusCodes.OK).json(books)
   } catch (error) {
     next(error)
