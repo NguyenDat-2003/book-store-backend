@@ -139,7 +139,7 @@ const getPurchases = async (req, res, next) => {
 
 const recommendSystem = async (req, res, next) => {
   try {
-    const purchases = await userService.recommendSystem(req.user.id, req.body)
+    const purchases = await userService.recommendSystem(req.user?.id || 0, req.body)
     return res.status(StatusCodes.OK).json(purchases)
   } catch (error) {
     next(error)

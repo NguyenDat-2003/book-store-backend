@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import db from '~/models'
 import slugify from '~/utils/slugify'
 
@@ -13,10 +14,14 @@ const createNew = async (reqBody) => {
     throw error
   }
 }
-const getAll = async (page, limit) => {
-  const offset = (page - 1) * limit
+const getAll = async (reqQuery) => {
+  let { page, limit, name } = reqQuery
   try {
     if (page && limit) {
+      page = parseInt(page) || 1
+      limit = parseInt(limit) || 10
+
+      let offset = (page - 1) * limit
       const { count, rows } = await db.Book.findAndCountAll({
         offset,
         limit,
@@ -24,6 +29,12 @@ const getAll = async (page, limit) => {
       })
       let totalPages = Math.ceil(count / limit)
       return { totalRows: count, totalPages, books: rows }
+    } else if (name) {
+      return await db.Book.findAll({
+        where: { name: { [Op.like]: `%${name}%` } },
+        limit: 9,
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
     } else {
       return await db.Book.findAll({ include: [{ model: db.Supplier }, { model: db.Category }], order: [['id', 'DESC']] })
     }
