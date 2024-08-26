@@ -16,11 +16,10 @@ const createNew = async (reqBody) => {
 }
 const getAll = async (reqQuery) => {
   let { page, limit, name } = reqQuery
+  page = parseInt(page)
+  limit = parseInt(limit)
   try {
     if (page && limit) {
-      page = parseInt(page) || 1
-      limit = parseInt(limit) || 10
-
       let offset = (page - 1) * limit
       const { count, rows } = await db.Book.findAndCountAll({
         offset,
@@ -35,9 +34,9 @@ const getAll = async (reqQuery) => {
         limit: 9,
         attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
-    } else {
-      return await db.Book.findAll({ include: [{ model: db.Supplier }, { model: db.Category }], order: [['id', 'DESC']] })
     }
+
+    return await db.Book.findAll({ include: [{ model: db.Supplier }, { model: db.Category }], order: [['id', 'DESC']] })
   } catch (error) {
     throw error
   }
