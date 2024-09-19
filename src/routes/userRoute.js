@@ -3,10 +3,11 @@ import { authController } from '~/controllers/authController'
 import { userController } from '~/controllers/userController'
 import { checkUserPermission } from '~/middlewares/checkUserPermission'
 import { verifyToken } from '~/middlewares/verifyToken'
+import { authValidation } from '~/validations/authValidation'
 
 const router = express.Router()
 
-router.post('/signup', authController.signup)
+router.post('/signup', authValidation.signUp, authController.signup)
 router.post('/login', authController.login)
 router.post('/logout', authController.logout)
 router.post('/recommend', userController.recommendSystem)
