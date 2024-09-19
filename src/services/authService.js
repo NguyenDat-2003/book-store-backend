@@ -22,20 +22,20 @@ const login = async (reqBody) => {
     const { email, password } = reqBody
 
     if (!email || !password) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'Please provide email and password')
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Vui lòng nhập email và mật khẩu')
     }
 
     const user = await db.User.findOne({
       where: { email }
     })
     if (!user) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'Incorrect email!')
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Email không tồn tại!')
     }
     const matchUser = await bcrypt.compare(password, user.password)
     if (matchUser) {
       return user
     } else {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'Incorrect password!')
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Sai mật khẩu!')
     }
   } catch (error) {
     throw error
