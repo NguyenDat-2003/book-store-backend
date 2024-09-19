@@ -50,4 +50,35 @@ const signUp = async (req, res, next) => {
   }
 }
 
-export const authValidation = { signUp }
+const updateUser = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    firstName: Joi.string().pattern(new RegExp('^([^0-9]*)$')).messages({
+      'string.pattern.base': 'Họ không được có chữ số'
+    }),
+    lastName: Joi.string().pattern(new RegExp('^([^0-9]*)$')).messages({
+      'string.pattern.base': 'Tên không được có chữ số'
+    }),
+    email: Joi.string()
+      .optional()
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+      .messages({
+        'string.base': 'Email không được nhập số',
+        'string.email': 'Email phải có định dạng : Example@gmail.com',
+        'string.trim': 'Email không được chứa khoảng trắng'
+      })
+      .trim(),
+    phone: Joi.string().optional().max(11).pattern(new RegExp('^[0-9]*$')).messages({
+      'string.max': 'Số điện thoại không vượt 11 ký tự',
+      'string.pattern.base': 'Số điện thoại không chứa chữ cái'
+    })
+  }).unknown()
+
+  try {
+    await correctCondition.validateAsync(req.body, { abortEarly: false }) // Tiếp tục validate tất cả các trường
+    next()
+  } catch (error) {
+    next(new ApiError(StatusCodes.BAD_REQUEST, error.message))
+  }
+}
+
+export const authValidation = { signUp, updateUser }

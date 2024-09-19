@@ -11,7 +11,7 @@ export const verifyToken = async (req, res, next) => {
   const token = req.cookies.token
 
   if (!token) {
-    return next(new ApiError(StatusCodes.UNAUTHORIZED, 'You are not logged in! Please log in to get access.'))
+    return next(new ApiError(StatusCodes.UNAUTHORIZED, 'Bạn chưa đăng nhập, vui lòng đăng nhập'))
   }
 
   // 2) Verification token
