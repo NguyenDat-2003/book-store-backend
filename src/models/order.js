@@ -29,6 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       totalOrderPrice: {
         type: DataTypes.DOUBLE,
         defaultValue: 0
+      },
+      status: {
+        type: DataTypes.INTEGER
       }
     },
     {

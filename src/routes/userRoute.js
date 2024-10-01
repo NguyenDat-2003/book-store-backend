@@ -23,6 +23,7 @@ router.delete('/delete-cart-item/:bookId', userController.deleteCartItem)
 router.get('/my-cart', userController.getMyCart)
 router.post('/order', userController.orderCart)
 router.get('/my-order', userController.getOrder)
+router.get('/my-order-status/:status', userController.getOrderStatus)
 router.get('/purchases', userController.getPurchases)
 
 router.use(checkUserPermission)
