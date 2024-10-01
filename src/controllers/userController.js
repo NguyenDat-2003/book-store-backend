@@ -155,6 +155,24 @@ const recommendSystem = async (req, res, next) => {
   }
 }
 
+const getAllOrder = async (req, res, next) => {
+  try {
+    const allOrders = await userService.getAllOrder()
+    return res.status(StatusCodes.OK).json(allOrders)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const updateStatusOrder = async (req, res, next) => {
+  try {
+    const order = await userService.updateStatusOrder(req.body)
+    return res.status(StatusCodes.OK).json(order)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const userController = {
   createUser,
   getAllUser,
@@ -172,5 +190,7 @@ export const userController = {
   getOrder,
   getOrderStatus,
   getPurchases,
-  recommendSystem
+  recommendSystem,
+  getAllOrder,
+  updateStatusOrder
 }

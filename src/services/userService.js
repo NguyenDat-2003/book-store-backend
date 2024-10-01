@@ -27,21 +27,8 @@ const getBooksInOrder = async (userId) => {
         model: db.Book,
         through: { attributes: ['quantity', 'unitPrice'] }
       }
-    ]
-  })
-}
-
-const getBooksInOrderByStatus = async (userId, status) => {
-  return await db.Order.findAll({
-    where: {
-      [Op.and]: [{ userId }, { status }]
-    },
-    include: [
-      {
-        model: db.Book,
-        through: { attributes: ['quantity', 'unitPrice'] }
-      }
-    ]
+    ],
+    order: [['id', 'DESC']]
   })
 }
 
@@ -369,16 +356,13 @@ const getOrder = async (userId) => {
 
 const getOrderStatus = async (userId, status) => {
   try {
-    let order = await db.Order.findAll({
+    const inforMyOrder = await db.Order.findAll({
       where: {
         [Op.and]: [{ userId }, { status }]
-      }
+      },
+      include: { model: db.Book },
+      order: [['id', 'DESC']]
     })
-    if (!order) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found!')
-    }
-
-    const inforMyOrder = await getBooksInOrderByStatus(userId, status)
 
     return inforMyOrder
   } catch (error) {
@@ -434,6 +418,29 @@ const recommendSystem = async (userId, reqBody) => {
   }
 }
 
+const getAllOrder = async () => {
+  try {
+    return await db.Order.findAll({
+      include: { model: db.Book },
+      order: [['id', 'DESC']]
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+const updateStatusOrder = async (reqBody) => {
+  try {
+    return await db.Order.update(reqBody, {
+      where: {
+        id: reqBody.id
+      }
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userService = {
   createNew,
   getAll,
@@ -451,5 +458,7 @@ export const userService = {
   getOrder,
   getOrderStatus,
   getPurchases,
-  recommendSystem
+  recommendSystem,
+  getAllOrder,
+  updateStatusOrder
 }
