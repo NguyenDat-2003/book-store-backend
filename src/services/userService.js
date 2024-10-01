@@ -31,6 +31,20 @@ const getBooksInOrder = async (userId) => {
   })
 }
 
+const getBooksInOrderByStatus = async (userId, status) => {
+  return await db.Order.findAll({
+    where: {
+      [Op.and]: [{ userId }, { status }]
+    },
+    include: [
+      {
+        model: db.Book,
+        through: { attributes: ['quantity', 'unitPrice'] }
+      }
+    ]
+  })
+}
+
 const checkEmailExist = async (email) => {
   try {
     return await db.User.findOne({ where: { email } })
@@ -216,7 +230,6 @@ const getMyCart = async (userId) => {
 }
 
 const orderCart = async (userId, reqBody) => {
-  const { fullName, phone, address } = reqBody
   const transaction = await db.sequelize.transaction()
   try {
     let cart = await db.Cart.findOne({ where: { userId } })
@@ -224,16 +237,7 @@ const orderCart = async (userId, reqBody) => {
     if (!cart) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Cart not found')
     }
-
-    const order = await db.Order.create(
-      {
-        userId,
-        fullName,
-        phone,
-        address
-      },
-      { transaction }
-    )
+    const order = await db.Order.create({ userId, ...reqBody }, { transaction })
 
     const booksInCart = await getBooksInCartUser(cart)
     for (const book of booksInCart.Books) {
@@ -247,13 +251,10 @@ const orderCart = async (userId, reqBody) => {
       book.sold += book.Book_Cart.quantity
       await book.save({ transaction })
     }
-
     order.totalOrderPrice = cart.totalCartPrice
     await order.save({ transaction })
-
     await db.Book_Cart.destroy({ where: { cartId: cart.id }, transaction })
     await db.Cart.destroy({ where: { id: cart.id }, transaction })
-
     await transaction.commit()
     return { message: 'Đặt hàng thành công' }
   } catch (error) {
@@ -350,12 +351,34 @@ const deleteCartItem = async (userId, bookId) => {
 
 const getOrder = async (userId) => {
   try {
-    let order = await db.Order.findAll({ where: { userId } })
+    let order = await db.Order.findAll({
+      where: { userId }
+    })
     if (!order) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found!')
     }
 
+    // const inforMyOrder = await getBooksInOrderByStatus(userId, 4)
     const inforMyOrder = await getBooksInOrder(userId)
+
+    return inforMyOrder
+  } catch (error) {
+    throw error
+  }
+}
+
+const getOrderStatus = async (userId, status) => {
+  try {
+    let order = await db.Order.findAll({
+      where: {
+        [Op.and]: [{ userId }, { status }]
+      }
+    })
+    if (!order) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found!')
+    }
+
+    const inforMyOrder = await getBooksInOrderByStatus(userId, status)
 
     return inforMyOrder
   } catch (error) {
@@ -426,6 +449,7 @@ export const userService = {
   updateCartQuantity,
   deleteCartItem,
   getOrder,
+  getOrderStatus,
   getPurchases,
   recommendSystem
 }
