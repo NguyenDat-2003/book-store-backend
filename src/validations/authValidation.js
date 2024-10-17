@@ -5,12 +5,12 @@ import ApiError from '~/utils/ApiError'
 const signUp = async (req, res, next) => {
   const correctCondition = Joi.object({
     firstName: Joi.string().required().messages({
-      'any.required': 'This is required',
+      'any.required': 'Họ tên không được trống',
       'string.empty': 'Họ tên không được trống',
       'string.base': 'Họ tên không được nhập số'
     }),
     lastName: Joi.string().required().messages({
-      'any.required': 'This is required',
+      'any.required': 'Tên không được trống',
       'string.empty': 'Tên không được trống',
       'string.base': 'Tên không được nhập số'
     }),
@@ -18,7 +18,7 @@ const signUp = async (req, res, next) => {
       .required()
       .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
       .messages({
-        'any.required': 'This is required',
+        'any.required': 'Email không được trống',
         'string.empty': 'Email không được trống',
         'string.base': 'Email không được nhập số',
         'string.email': 'Email phải có định dạng : Example@gmail.com',
@@ -32,7 +32,7 @@ const signUp = async (req, res, next) => {
       .pattern(new RegExp('(?=.*[0-9])')) // Ít nhất một chữ số
       .pattern(new RegExp('(?=.*[!@#$%^&*])')) // Ít nhất một ký tự đặc biệt
       .messages({
-        'any.required': 'This is required',
+        'any.required': 'Mật khẩu không được trống',
         'string.empty': 'Mật khẩu không được trống',
         'string.min': 'Mật khẩu phải có ít nhất 6 ký tự',
         'string.trim': 'Mật khẩu không được chứa khoảng trắng',
