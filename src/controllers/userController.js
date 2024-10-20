@@ -22,7 +22,7 @@ const getAllUser = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const user = await userService.getDetail(req.body.id)
+    const user = await userService.getDetail(req.query.id)
     return res.status(StatusCodes.CREATED).json(user)
   } catch (error) {
     next(error)
