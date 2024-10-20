@@ -32,11 +32,10 @@ const login = async (reqBody) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Email không tồn tại!')
     }
     const matchUser = await bcrypt.compare(password, user.password)
-    if (matchUser) {
-      return user
-    } else {
+    if (!matchUser) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Sai mật khẩu!')
     }
+    return user
   } catch (error) {
     throw error
   }
