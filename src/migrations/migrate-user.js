@@ -35,6 +35,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       groupId: Sequelize.INTEGER,
+      codeId: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

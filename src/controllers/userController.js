@@ -173,6 +173,24 @@ const updateStatusOrder = async (req, res, next) => {
   }
 }
 
+const sendEmail = async (req, res, next) => {
+  try {
+    const message = await userService.sendEmail(req.body.email)
+    return res.status(StatusCodes.OK).json(message)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const changePassword = async (req, res, next) => {
+  try {
+    const data = await userService.changePassword(req.body)
+    return res.status(StatusCodes.OK).json(data)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const userController = {
   createUser,
   getAllUser,
@@ -192,5 +210,7 @@ export const userController = {
   getPurchases,
   recommendSystem,
   getAllOrder,
-  updateStatusOrder
+  updateStatusOrder,
+  sendEmail,
+  changePassword
 }
