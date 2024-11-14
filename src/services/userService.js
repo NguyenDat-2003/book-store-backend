@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs'
 import { StatusCodes } from 'http-status-codes'
 import { Op } from 'sequelize'
+import { v4 as uuidv4 } from 'uuid'
 
+import { mailOptions, transporter } from '~/mail'
 import db from '~/models'
 import ApiError from '~/utils/ApiError'
 import { recommendItems } from '~/utils/recommendSystem'
@@ -441,6 +443,55 @@ const updateStatusOrder = async (reqBody) => {
   }
 }
 
+const sendEmail = async (email) => {
+  try {
+    const user = await db.User.findOne({ where: { email } })
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Email không tồn tại!')
+    }
+
+    const code = uuidv4()
+    await db.User.update(
+      { codeId: code },
+      {
+        where: { id: user.id }
+      }
+    )
+
+    transporter.sendMail(mailOptions(user.email, code))
+
+    return { id: user.id, message: 'send email' }
+  } catch (error) {
+    throw error
+  }
+}
+
+const changePassword = async (reqBody) => {
+  const { code, password, confirmPassword, userEmail } = reqBody
+  try {
+    const user = await db.User.findOne({ where: [{ email: userEmail }, { codeId: code }] })
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User không tồn tại!')
+    }
+
+    if (password !== confirmPassword) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Mật khẩu xác nhận không đúng!')
+    }
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    await db.User.update(
+      { password: hashedPassword },
+      {
+        where: { id: user.id }
+      }
+    )
+
+    return { id: user.id, message: 'Cập nhật mật khẩu thành công' }
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userService = {
   createNew,
   getAll,
@@ -460,5 +511,7 @@ export const userService = {
   getPurchases,
   recommendSystem,
   getAllOrder,
-  updateStatusOrder
+  updateStatusOrder,
+  sendEmail,
+  changePassword
 }

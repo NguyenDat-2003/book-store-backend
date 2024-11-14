@@ -11,6 +11,8 @@ router.post('/signup', authValidation.signUp, authController.signup)
 router.post('/login', authController.login)
 router.post('/logout', authController.logout)
 router.post('/recommend', userController.recommendSystem)
+router.post('/send-mail', userController.sendEmail)
+router.post('/change-password', authValidation.changePassword, userController.changePassword)
 
 router.use(verifyToken)
 router.put('/update-password', userController.updatePassword)
