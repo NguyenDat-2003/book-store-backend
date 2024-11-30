@@ -18,14 +18,9 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": "mysql",
-    "database": "books_store",
-    "host": "localhost",
-    "dialect": "mysql",
-    "logging": false,
-    "define": {
-      "freezeTableName": true
-    }
+    "username": "ucbkby8ppeo4gwws",
+    "password": "wDk5qFAs0vBLNDPgtcVD",
+    "database": "bwf7nmac8ghzlilidihe",
+    "host": "bwf7nmac8ghzlilidihe-mysql.services.clever-cloud.com"
   }
 }
